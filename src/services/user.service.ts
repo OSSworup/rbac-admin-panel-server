@@ -48,14 +48,8 @@ export const LoginUserService = async (data: LoginUserInput) => {
     const { email, password } = data;
     const user = await prisma.user.findUnique({ where: { email } });
 
-    if (!user) {
-        throw new Error("user not found");
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-        throw new Error("Incrroect password");
+    if(!user||!(await bcrypt.compare(password, user.password))){
+        throw new Error("Invalid user or password");
     }
 
     const payload = {
