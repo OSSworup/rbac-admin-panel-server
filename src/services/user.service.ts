@@ -114,6 +114,8 @@ export const FetchAllUsers = async (page: number = 1, size: number = 5) => {
         }
     });;
 
+    const totalUsers=await prisma.user.count();
+
     const result = users.map(user => ({
         id: user.id,
         email: user.email,
@@ -125,7 +127,7 @@ export const FetchAllUsers = async (page: number = 1, size: number = 5) => {
         roles: user.userRoles.map(ur => ur.role),
     }));
 
-    return result;
+    return {users:result,totalUsers:totalUsers};
 }
 
 export const UpdateUserService = async (id: string, data: UpdateUserData) => {
